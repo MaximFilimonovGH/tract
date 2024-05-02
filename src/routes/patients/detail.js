@@ -654,11 +654,31 @@ class PatientsDetail extends Component {
   }
 
   moveToPatient(patientType) {
-    // get current patients index in the patients items list
-    let currentPatientIndex = this.props.patientsApp.allPatientsItems.findIndex(x => x.id === this.patientId);
+    // make a copy of patients list
+    let patientsListToSort = JSON.parse(JSON.stringify(this.props.patientsApp.allPatientsItems));
+    const order = {
+      field: 'name',
+      asc: true,
+    }
+
+    // sort patients list based on full name
+    let orderedPatientsList = patientsListToSort.sort((a, b) => {
+      if (order.asc) {
+        if (a[order.field] > b[order.field]) {
+          return 1
+        } else if (a[order.field] < b[order.field]) {
+          return -1
+        } else {
+          return 0
+        }
+      }
+    });
+
+    // get current patients index in the sorted patients items list
+    let currentPatientIndex = orderedPatientsList.findIndex(x => x.id === this.patientId);
 
     // check if the last patient and next patient clicked. If so - do nothing
-    if ((currentPatientIndex == this.props.patientsApp.allPatientsItems.length - 1) && (patientType === 'next')) {
+    if ((currentPatientIndex == orderedPatientsList.length - 1) && (patientType === 'next')) {
       return null;
     }
     // check if the first patient and previous patient clicked. If so - do nothing.
@@ -669,10 +689,10 @@ class PatientsDetail extends Component {
     else {
       let switchPatientId = 0;
       if (patientType === 'next') {
-        switchPatientId = this.props.patientsApp.allPatientsItems[currentPatientIndex + 1].id;
+        switchPatientId = orderedPatientsList[currentPatientIndex + 1].id;
       }
       else {
-        switchPatientId = this.props.patientsApp.allPatientsItems[currentPatientIndex - 1].id;
+        switchPatientId = orderedPatientsList[currentPatientIndex - 1].id;
       }
       this.patientId = switchPatientId;
       this.patientSurveyUpdated = false;
