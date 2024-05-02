@@ -664,15 +664,19 @@ class PatientsDetail extends Component {
     // sort patients list based on full name
     let orderedPatientsList = patientsListToSort.sort((a, b) => {
       if (order.asc) {
-        if (a[order.field] > b[order.field]) {
-          return 1
-        } else if (a[order.field] < b[order.field]) {
-          return -1
-        } else {
-          return 0
-        }
+        return a[order.field].toLowerCase().localeCompare(b[order.field].toLowerCase(), undefined, {
+          numeric: true,
+          sensitivity: 'base'
+        })
       }
-    });
+      else {
+        return b[order.field].toLowerCase().localeCompare(a[order.field].toLowerCase(), undefined, {
+          numeric: true,
+          sensitivity: 'base'
+        })
+      }
+      
+    })
 
     // get current patients index in the sorted patients items list
     let currentPatientIndex = orderedPatientsList.findIndex(x => x.id === this.patientId);
