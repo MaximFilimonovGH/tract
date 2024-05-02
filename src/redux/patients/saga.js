@@ -59,7 +59,7 @@ function* getPatientsListItems() {
 }
 
 const addPatientsItemRequest = async item => {
-  item.createDate = getDateWithFormat();
+  // item.createDate = getDateWithFormat();
 
   // search in discharged patients first
   return database.ref('wards/' + localStorage.getItem('user_currentWard') + '/dischargedPatients/' + item.id)

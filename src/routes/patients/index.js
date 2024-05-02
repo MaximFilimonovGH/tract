@@ -47,6 +47,8 @@ import {
 } from "Redux/actions";
 
 import { assessmentLevelToColor } from "../../constants/defaultValues"
+import { getDateWithFormat } from "Util/Utils";
+import DatePicker from "react-datepicker";
 
 class Patients extends Component {
   constructor(props) {
@@ -62,6 +64,8 @@ class Patients extends Component {
 
       id: "",
       name: "",
+      admittedDate: getDateWithFormat(),
+      todayDate: getDateWithFormat(),
       label: {},
       category: {},
       status: "PENDING",
@@ -121,6 +125,7 @@ class Patients extends Component {
     const newItem = {
       id: this.state.id,
       name: this.state.name,
+      createDate: this.state.admittedDate
     };
     this.props.addPatientsItem(newItem);
     this.toggleModal();
@@ -343,6 +348,21 @@ class Patients extends Component {
                                   }}
                                   onKeyPress={e => this.handleModalKeyPress(e)}
                                 />
+                                
+                                <Label className="mt-4">
+                                  Admitted Date
+                                </Label>
+                                <DatePicker
+                                  calendarClassName="embedded"
+                                  inline
+                                  selected={moment(this.state.admittedDate, "DD.MM.YYYY")}
+                                  onSelect={(date) => {
+                                    this.setState({ admittedDate: date.format('DD.MM.YYYY') });
+                                  }}
+                                  highlightDates={[moment(this.state.todayDate, "DD.MM.YYYY")]}
+                                  locale="en-GB"
+                                  >
+                                </DatePicker>
 
                               </ModalBody>
                               <ModalFooter>
